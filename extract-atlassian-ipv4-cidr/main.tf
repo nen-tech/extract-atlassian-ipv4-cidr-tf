@@ -8,10 +8,10 @@ data "http" "atlassian_cidr_ranges" {
   }
 }
 
-#-----------------------------------------------------------------------------------------------------------------------------------#
-# Using terraform external data resource to run a bash program which uses JQ to filter only ipv4 cidr ranges from the http response.
+#----------------------------------------------------------------------------------------------------------------------------------------#
+# Using terraform external data resource to run a bash program which uses JQ to filter only ipv4 cidr ranges from the http json response.
 # Separated ipv4 cidr range with || for easier readability.
-#-----------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------#
 data "external" "atlassian_ipv4_cidr_ranges" {
   program = ["bash", "-c", "echo '${data.http.atlassian_cidr_ranges.body}' | jq -r '{ipv4_cidr_only:[.items[]|select(.cidr|contains(\":\")|not).cidr] | join(\" || \")}'"]
 }
